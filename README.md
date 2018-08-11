@@ -1,6 +1,6 @@
 # MVVM_RX
 Android (MVVM) pattern with RXJava &amp; Retrofit .
-* MVVM Pettern
+* MVVM pattern
 * RxJava
 * Retrofit
 * Databinding
