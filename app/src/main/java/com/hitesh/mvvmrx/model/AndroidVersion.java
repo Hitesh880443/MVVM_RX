@@ -4,8 +4,8 @@ public class AndroidVersion {
 
     String api_level;
     String name;
-    String release_date;
     String version;
+    String type;
 
     public AndroidVersion() {
     }
@@ -26,13 +26,6 @@ public class AndroidVersion {
         this.name = name;
     }
 
-    public String getRelease_date() {
-        return release_date;
-    }
-
-    public void setRelease_date(String release_date) {
-        this.release_date = release_date;
-    }
 
     public String getVersion() {
         return version;
@@ -40,5 +33,13 @@ public class AndroidVersion {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

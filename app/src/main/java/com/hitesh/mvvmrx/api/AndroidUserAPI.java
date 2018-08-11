@@ -8,6 +8,6 @@ import retrofit2.http.GET;
 
 public interface AndroidUserAPI {
 
-    @GET("/news.json")
+    @GET("/versionapi.json")
     Observable<AndroidVersionResposne> getAndroidVersion();
 }

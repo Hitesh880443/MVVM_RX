@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View"/>
         <variable
-            name="androidversion"
+            name="androidVersionViewModel"
             type="com.hitesh.mvvmrx.viewModel.AndroidVersionViewModel" />
     </data>
 
@@ -27,6 +27,16 @@
             android:layout_height="match_parent"
             android:layout_below="@id/toolbar"
             android:padding="5dp"
+            android:visibility="@{androidVersionViewModel.hasData ? View.VISIBLE : View.GONE}"
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/no_data"
+            android:visibility="@{androidVersionViewModel.hasData ?  View.GONE : View.VISIBLE}"
             />
 
 

@@ -3,9 +3,8 @@ package com.hitesh.mvvmrx.view;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.Toast;
 
 import com.hitesh.mvvmrx.R;
 import com.hitesh.mvvmrx.databinding.ActivityMainBinding;
@@ -21,33 +20,30 @@ public class MainActivity extends AppCompatActivity{
     private AndroidVersionViewModel mAndroidVersionViewModel;
     private DisposableObserver mGetAndroidVersion;
     private RecyclerView mVersionList;
+    private VersionAdapter mVersionAdapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initDataBinding();
-        setSupportActionBar(mMainActivityBinding.toolbar);
-        initRecylerView();
-        mMainActivityBinding.btnClick.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getAndroidVersion();
-            }
-        });
+        setUpView();
     }
-
-    private void initRecylerView() {
-        mVersionList = mMainActivityBinding.rlVersionlist;
-        //recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-    }
-
 
     private void initDataBinding() {
         mMainActivityBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mAndroidVersionViewModel = new AndroidVersionViewModel(this);
-        mMainActivityBinding.setAndroidversion(mAndroidVersionViewModel);
+        mMainActivityBinding.setAndroidVersionViewModel(mAndroidVersionViewModel);
+    }
 
+    private void setUpView() {
+        setSupportActionBar(mMainActivityBinding.toolbar);
+
+        mVersionList = mMainActivityBinding.rlVersionlist;
+        mVersionList.setLayoutManager(new LinearLayoutManager(this));
+        mVersionAdapter = new VersionAdapter();
+        mVersionAdapter.showList(mAndroidVersionViewModel.getDataList());
+        mVersionList.setAdapter(mVersionAdapter);
     }
 
     private void getAndroidVersion() {
@@ -55,9 +51,9 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onNext(AndroidVersionResposne data) {
                 if (data != null && data.getData().size() > 0) {
-                    Logger.d("Android dataSize", String.valueOf(data.getData().size()));
-                    Toast.makeText(MainActivity.this, "List  "+data.getData().size(), Toast.LENGTH_SHORT).show();
-
+                    mAndroidVersionViewModel.updateVersionDataList(data.getData());
+                    mMainActivityBinding.setAndroidVersionViewModel(mAndroidVersionViewModel);
+                    updateList();
                 }
             }
 
@@ -65,16 +61,22 @@ public class MainActivity extends AppCompatActivity{
             public void onError(Throwable e) {
                 Logger.d("Android error", e.getMessage());
             }
-
             @Override
             public void onComplete() {
                 Logger.d("Android complete","done");
             }
         };
 
-
         mAndroidVersionViewModel.getAndroidVersionList(mGetAndroidVersion);
     }
 
+    private void updateList() {
+        mVersionAdapter.showList(mAndroidVersionViewModel.getDataList());
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getAndroidVersion();
+    }
 }
